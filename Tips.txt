@@ -1,0 +1,70 @@
+Tips:
+VADER, a heuristic for testing REST APIs
+Focused on exploratory testing in REST APIs, this heuristic brings 5 principles to evaluate the behavior of a REST API:
+- Verbs: REST API methods
+	Test whether POST requests successfully create new resources with valid data.
+	Test whether POST requests successfully create new resources with valid data.
+	Check if PUT correctly updates an existing resource, and that PATCH applies partial updates.
+	Confirm that DELETE removes resources and returns the correct status code, e.g., 204 No Content.
+
+- Authorization & Authentication: Authentication and authorization mechanisms
+	Test login endpoints to ensure users can authenticate with valid credentials and receive appropriate tokens.
+	Verify that endpoints requiring authorization return 403 Forbidden or 401 Unauthorized when accessed without proper credentials.
+	Evaluate token expiration to ensure expired tokens prompt re-authentication.
+	Evaluate token expiration to ensure expired tokens prompt re-authentication.	
+
+- Data: Data and structure
+	Validate data returned by the API for proper formatting (e.g., JSON with correct key-value pairs).
+	Test that required fields are present and optional fields are handled correctly
+	Verify consistency in the data schema across multiple endpoints.
+	Ensure response data matches the request payload for operations like POST and PUT.
+
+- Errors: HTTP status codes for errors
+	Ensure response data matches the request payload for operations like POST and PUT.
+	Verify that accessing nonexistent resources returns 404 Not Found.
+	Ensure server-side errors are handled gracefully with 500 Internal Server Error and detailed error messages.
+	Test for rate-limiting by making excessive requests and checking for 429 Too Many Requests.
+
+- Responsiveness: Response time
+	Measure response times for all endpoints and compare them against acceptable thresholds.
+	Test how the API handles high concurrency or large payloads without significant delays.
+	Evaluate the impact of network latency on response times and provide fallback mechanisms, if necessary.
+	Evaluate the impact of network latency on response times and provide fallback mechanisms, if necessary.
+
+
+Basic REST API Testing Checklist:
+- Business Logic Rules:
+	Verify that the business logic is correctly implemented. For example, calculations, validations, access rules.
+
+- Flow Continuity:
+	Ensure that the data and operation flows are functioning without interruptions. This includes the sequence of requests the system expects and how it handles them.
+
+- Data Typing:
+	Check that the data types sent and received in requests are correct. For example, a number should be sent as int or float, not as a string.
+
+- Parameters (Body, Filter, Path, etc.):
+	Validate that the parameters sent (whether in the body, as filters, or in the URL - path params, query params) are correct, within expectations, and processed correctly.
+
+- Token Usage for Different Users:
+	Test with different user tokens to ensure that permissions and access are respected as expected for each type of user.
+
+- Method Validation:
+	Validate that the HTTP methods (GET, POST, PUT, DELETE, etc.) are used correctly according to the type of operation the API is performing.
+
+- Resources List (0, 1, and Many):
+	Verify the response for endpoints that return a single resource, no resources, or a list of multiple resources. Also test the response when no resources are found.
+
+- Response Structure:
+	Validate that the response structure is consistent, well-defined, and easily understandable. The JSON or XML format should be followed correctly.
+
+- HTTP Status Codes:
+	Verify that the HTTP status codes are appropriate for each type of response. For example:
+	200 OK
+	201 Created
+	400 Bad Request
+	401 Unauthorized
+	404 Not Found
+	500 Internal Server Error
+
+-	API Contract Documentation:
+	Ensure that the API documentation is up-to-date and accurately describes the API contracts, including endpoints, parameters, response types, and error codes.

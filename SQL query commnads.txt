@@ -1,0 +1,31 @@
+//Creating the table
+CREATE TABLE product (productid INT NOT NULL AUTO_INCREMENT, productname VARCHAR(100) NOT NULL, productbrand VARCHAR(100) NOT NULL, productvalue DECIMAL(9,2) NOT NULL, productsize VARCHAR(100) NOT NULL, productadditionalItems VARCHAR(100) NOT NULL, PRIMARY KEY (productid) );
+//Filling the table with product
+INSERT INTO product (productname, productbrand, productvalue, productsize, productadditionalItems) VALUES ('PS5', 'SONY', 499.99, 'Medio', '2 controles e 3 cabos');
+INSERT INTO product (productname, productbrand, productvalue, productsize, productadditionalItems) VALUES ('Xbox Series X', 'Microsoft', 549.99, 'Grande', '1 controle e 1 cabo HDMI');
+INSERT INTO product (productname, productbrand, productvalue, productsize, productadditionalItems) VALUES ('Nintendo Switch', 'Nintendo', 299.99, 'Pequeno', '2 Joy-Cons e 1 dock');
+
+//Creating the table
+CREATE TABLE additionalitem (additionalitemid INT NOT NULL AUTO_INCREMENT, additionalitemname VARCHAR(200) NOT NULL, PRIMARY KEY(additionalitemid);
+//Adding another row inside the table
+ALTER TABLE additionalitem ADD productid int not null
+ALTER TABLE additionalitem ADD additionalitemquantity int not null
+//Filling the table
+INSERT INTO additionalitem(additionalitemname, productid, additionalitemquantity) VALUES ('Controles', 1, 2);
+INSERT INTO additionalitem(additionalitemname, productid, additionalitemquantity) VALUES ('Jogos', 1, 3);
+INSERT INTO additionalitem(additionalitemname, productid, additionalitemquantity) VALUES ('Cabos', 2, 2);
+INSERT INTO additionalitem(additionalitemname, productid, additionalitemquantity) VALUES ('Cabos', 5, 1);
+
+//removing the productadditionalItems row from product table so we can use additionalitem table 
+ALTER TABLE product DROP COLUMN productadditionalItems;
+
+//Joining the 2 tables into one. LEFT JOIN will include empty data.
+SELECT * FROM product JOIN additionalitem ON additionalitem.productid = product.productid;
+SELECT product.productid, product.productname, additionalitem.additionalitemname, additionalitem.additionalitemquantity FROM product JOIN additionalitem ON additionalitem.productid = product.productid;
+
+//Changing a productname value in product table. ALWAYS USE WHERE
+UPDATE product SET productname = "PlayStation 5" WHERE productid = 1;
+
+//Removing a row. ALWAYS USE WHERE
+Delete FROM product WHERE productname = 'xbox series x';
+Delete FROM product WHERE productid >= 4;
