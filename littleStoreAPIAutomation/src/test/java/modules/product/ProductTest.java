@@ -3,6 +3,7 @@ package modules.product;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dataFactory.ProductDataFactory;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,32 +48,10 @@ public class ProductTest {
     @DisplayName("Validate product value 0.00 is not allowed")
     public void testValidatelimitedLowerProductValues() throws JsonProcessingException {
         //Attempt to insert a product with a value of 0.00 and validate that an error message is displayed along with status code 422.
-
-        Product product = new Product();
-        product.setProdutoNome("Xbox S Series");
-
-        product.setProdutoValor(0.00);
-        List<String> colors = new ArrayList<>();
-        colors.add("preto");
-        colors.add("branco");
-        product.setProdutoCores(colors);
-        product.setProdutoUrlMock("");
-
-        List<Component> components = new ArrayList<>();
-
-        Component component = new Component();
-
-        component.setComponenteNome("Controle");
-        component.setComponenteQuantidade(2);
-        component.setComponenteNome("FC 2024");
-        component.setComponenteQuantidade(1);
-        components.add(component);
-        product.setComponentes(components);
-
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(product)
+                .body(ProductDataFactory.createCommomProductWithVariableValue(0.00))
                 .when()
                 .post("/v2/produtos")
                 .then()
@@ -84,33 +63,11 @@ public class ProductTest {
     @Test
     @DisplayName("Validate product value above 7000.00 is not allowed")
     public void testValidatelimitedHigherProductValues() {
-        //Attempt to insert a product with a value of 0.00 and validate that an error message is displayed along with status code 422.
-
-        Product product = new Product();
-        product.setProdutoNome("PlayStation 5");
-
-        product.setProdutoValor(7000.01);
-        List<String> colors = new ArrayList<>();
-        colors.add("rosa");
-        colors.add("vermelho");
-        product.setProdutoCores(colors);
-        product.setProdutoUrlMock("");
-
-        List<Component> components = new ArrayList<>();
-
-        Component component = new Component();
-
-        component.setComponenteNome("Controle");
-        component.setComponenteQuantidade(2);
-        component.setComponenteNome("FC 2025");
-        component.setComponenteQuantidade(1);
-        components.add(component);
-        product.setComponentes(components);
-
+        //Attempt to insert a product with a value of 7000.01 and validate that an error message is displayed along with status code 422.
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body(product)
+                .body((ProductDataFactory.createCommomProductWithVariableValue(7000.01)))
                 .when()
                 .post("/v2/produtos")
                 .then()
