@@ -4,6 +4,7 @@ package modules.product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dataFactory.ProductDataFactory;
+import dataFactory.UserDataFactory;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,14 +30,10 @@ public class ProductTest {
         //port = "";
         basePath = "/lojinha";
 
-        User user = new User();
-        user.setUsuarioLogin("raphaelsan");
-        user.setUsuarioSenha("123456");
-
         //Retrieve the token for the admin user
         this.token = given()
                 .contentType(ContentType.JSON)
-                .body(user)
+                .body(UserDataFactory.createAdminUser())
                 .when()
                 .post("/v2/login")
                 .then()
