@@ -32,10 +32,6 @@ public class ProductTest {
         user.setUsuarioLogin("raphaelsan");
         user.setUsuarioSenha("123456");
 
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(user);
-        System.out.println("JSON Gerado: " + json);
-
         //Retrieve the token for the admin user
         this.token = given()
                 .contentType(ContentType.JSON)
@@ -45,7 +41,6 @@ public class ProductTest {
                 .then()
                 .extract()
                 .path("data.token");
-        System.out.println(token);
     }
 
     @Test
@@ -55,7 +50,6 @@ public class ProductTest {
 
         Product product = new Product();
         product.setProdutoNome("Xbox S Series");
-        System.out.println("Product Name: " + product.getProdutoNome());
 
         product.setProdutoValor(0.00);
         List<String> colors = new ArrayList<>();
@@ -75,11 +69,6 @@ public class ProductTest {
         components.add(component);
         product.setComponentes(components);
 
-
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(product);
-        System.out.println("JSON Gerado: " + json);
-
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
@@ -96,33 +85,37 @@ public class ProductTest {
     @DisplayName("Validate product value above 7000.00 is not allowed")
     public void testValidatelimitedHigherProductValues() {
         //Attempt to insert a product with a value of 0.00 and validate that an error message is displayed along with status code 422.
+
+        Product product = new Product();
+        product.setProdutoNome("PlayStation 5");
+
+        product.setProdutoValor(7000.01);
+        List<String> colors = new ArrayList<>();
+        colors.add("rosa");
+        colors.add("vermelho");
+        product.setProdutoCores(colors);
+        product.setProdutoUrlMock("");
+
+        List<Component> components = new ArrayList<>();
+
+        Component component = new Component();
+
+        component.setComponenteNome("Controle");
+        component.setComponenteQuantidade(2);
+        component.setComponenteNome("FC 2025");
+        component.setComponenteQuantidade(1);
+        components.add(component);
+        product.setComponentes(components);
+
         given()
                 .contentType(ContentType.JSON)
                 .header("token", this.token)
-                .body("{\n" +
-                        "  \"produtoNome\": \"Xbox S Series\",\n" +
-                        "  \"produtoValor\": 7000.01,\n" +
-                        "  \"produtoCores\": [\n" +
-                        "    \"preto\"\n" +
-                        "  ],\n" +
-                        "  \"produtoUrlMock\": \"**\",\n" +
-                        "  \"componentes\": [\n" +
-                        "    {\n" +
-                        "      \"componenteNome\": \"Controle\",\n" +
-                        "      \"componenteQuantidade\": 2\n" +
-                        "    }, \n" +
-                        "    {\n" +
-                        "      \"componenteNome\": \"FC 2024\",\n" +
-                        "      \"componenteQuantidade\": 1\n" +
-                        "    }\n" +
-                        "  ]\n" +
-                        "}")
+                .body(product)
                 .when()
                 .post("/v2/produtos")
                 .then()
                 .assertThat()
                 .body("error", equalTo("O valor do produto deve estar entre R$ 0,01 e R$ 7.000,00"))
                 .statusCode(422);
-
     }
 }
