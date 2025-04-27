@@ -1,5 +1,6 @@
 package modules.products;
 
+import Pages.LoginPage;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -34,26 +35,19 @@ public class ProductTest {
     public void notAllowedToRegisterProductValueUnderZero() {
 
         //Login
-        browser.findElement(By.cssSelector("label[for='usuario']")).click();
-        browser.findElement(By.id("usuario")).sendKeys("raphaelsan");
-        browser.findElement(By.cssSelector("label[for='senha']")).click();
-        browser.findElement(By.id("senha")).sendKeys("123456");
-        browser.findElement(By.id("btn-entrar")).click();
-
-        //Go to product registration page
-        browser.findElement(By.linkText("ADICIONAR PRODUTO")).click();
-
-        //Fill product information and the value equals 0.00
-        browser.findElement(By.id("produtonome")).sendKeys("Macbook Pro");
-        browser.findElement(By.id("produtovalor")).sendKeys("0.00");
-        browser.findElement(By.id("produtocores")).sendKeys("branco, preto");
-
-        //Submit the form
-        browser.findElement(By.cssSelector("button[type='submit']")).click();
+        String message = new LoginPage(browser)
+                .fillUser("raphaelsan")
+                .fillPassword("123456")
+                .submitForm()
+                .addProductForm()
+                .fillProductName("Macbook Pro")
+                .fillProductValue("0.00")
+                .fillProductColor("Branco, Preto, Amarelo")
+                .submitFormWithWrongValue()
+                .captureMessage();
 
         //Validate the error message
-        String messageToast = browser.findElement(By.cssSelector(".toast.rounded")).getText();
-        Assertions.assertEquals("O valor do produto deve estar entre R$ 0,01 e R$ 7.000,00", messageToast);
+        Assertions.assertEquals("O valor do produto deve estar entre R$ 0,01 e R$ 7.000,00", message);
     }
 
     @AfterEach
