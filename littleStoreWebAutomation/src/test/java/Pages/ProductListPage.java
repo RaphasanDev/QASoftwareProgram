@@ -12,11 +12,14 @@ public class ProductListPage {
         this.browser = browser;
     }
 
-    public RegisterProductFormPage addProductForm(){
+    public ProductRegisterFormPage addProductForm() {
         browser.findElement(By.linkText("ADICIONAR PRODUTO")).click();
-        return new RegisterProductFormPage(browser);
+        return new ProductRegisterFormPage(browser);
     }
-    public String captureMessage(){
+
+    public String captureMessage() {
         return browser.findElement(By.cssSelector(".toast.rounded")).getText();
     }
+
+
 }
