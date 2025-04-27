@@ -1,26 +1,37 @@
 package modules.products;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class ProductTest {
+import java.time.Duration;
 
-    @DisplayName("Product Module Test")
-    @Test
-    public void notAllowedToRegisterProductValueUnderZero() {
+@DisplayName("Product Module Test")
+public class ProductTest {
+    private WebDriver browser;
+
+    @BeforeEach
+    public void beforeEach() {
         // Open the browser
         System.setProperty("webdriver.chrome.driver", "src/test/resources/drivers/chromedriver.exe");
-        WebDriver browser = new ChromeDriver();
+        this.browser = new ChromeDriver();
 
         //Maximize the page
         //browser.manage().window().maximize();
 
+        //Setting a 5 seconds wait
+        browser.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
         //Navigate to lojinha homepage
         browser.get("http://165.227.93.41/lojinha-web/v2");
+
+    }
+
+
+    @Test
+    @DisplayName("Don't allow product value <= 0,00")
+    public void notAllowedToRegisterProductValueUnderZero() {
 
         //Login
         browser.findElement(By.cssSelector("label[for='usuario']")).click();
@@ -43,6 +54,11 @@ public class ProductTest {
         //Validate the error message
         String messageToast = browser.findElement(By.cssSelector(".toast.rounded")).getText();
         Assertions.assertEquals("O valor do produto deve estar entre R$ 0,01 e R$ 7.000,00", messageToast);
+    }
 
+    @AfterEach
+    //Close the browser
+    public void afterEach() {
+        browser.quit();
     }
 }
